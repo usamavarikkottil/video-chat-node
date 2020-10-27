@@ -18,6 +18,13 @@ app.get("/:room", (req, res ) => {
     res.render("room", {roomId: req.params.room});
 })
 
+io.on("connection", socket => {
+    socket.on("join-room", (roomId, userId) => {
+        socket.join(roomId);
+        socket.to(roomId).broadcast.emit("user-connected", userId);
+        
+    })
+})
 
 const port = process.env.port || 5000
-app.listen(port, () => console.log("server started...."));
+server.listen(port, () => console.log("server started...."));
